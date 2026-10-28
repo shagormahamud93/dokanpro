@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: 248 250 252;
+    --surface: 255 255 255;
+    --surface-2: 241 245 249;
+    --border: 226 232 240;
+    --text: 15 23 42;
+    --text-muted: 100 116 139;
+    --text-faint: 148 163 184;
+    --primary: 37 99 235;
+    --primary-soft: 239 246 255;
+  }
+
+  .dark {
+    --bg: 11 17 32;
+    --surface: 17 24 39;
+    --surface-2: 31 41 55;
+    --border: 30 41 59;
+    --text: 241 245 249;
+    --text-muted: 148 163 184;
+    --text-faint: 100 116 139;
+    --primary: 59 130 246;
+    --primary-soft: 23 37 84;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-bg text-text font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Tabular numerals for prices, KPIs and tables */
+  .tabular,
+  table,
+  .price {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scrollbar polish */
+  ::-webkit-scrollbar {
+    @apply h-2 w-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-text-faint;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-surface/70 backdrop-blur-md;
+  }
+
+  .focus-ring {
+    @apply outline-none ring-0 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
+  }
+}
