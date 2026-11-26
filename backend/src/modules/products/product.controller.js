@@ -3,14 +3,28 @@ import { ApiError } from '../../utils/apiError.js'
 import { emitToShop, omitClientShopFields, shopScope } from '../../utils/tenant.js'
 import { Product } from './product.model.js'
 
+
 export const listProducts = asyncHandler(async (req, res) => {
   const { q, category, stock, page = 1, limit = 50 } = req.query
 
   const filter = { ...shopScope(req), active: true }
-  if (category && category !== 'All') filter.category = category
+
+  if (category && category !== 'All') {
+    filter.category = category
+  }
+
   if (stock === 'in') filter.stock = { $gt: 0 }
   if (stock === 'out') filter.stock = { $eq: 0 }
-  if (stock === 'low') filter.$expr = { $and: [{ $gt: ['$stock', 0] }, { $lt: ['$stock', 10] }] }
+
+  if (stock === 'low') {
+    filter.$expr = {
+      $and: [
+        { $gt: ['$stock', 0] },
+        { $lt: ['$stock', 10] },
+      ],
+    }
+  }
+
   if (q) {
     filter.$or = [
       { name: { $regex: q, $options: 'i' } },
@@ -28,14 +42,21 @@ export const listProducts = asyncHandler(async (req, res) => {
       .sort({ createdAt: -1 })
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum),
+
     Product.countDocuments(filter),
   ])
 
   res.json({
     data: items,
-    meta: { page: pageNum, limit: limitNum, total, totalPages: Math.ceil(total / limitNum) },
+    meta: {
+      page: pageNum,
+      limit: limitNum,
+      total,
+      totalPages: Math.ceil(total / limitNum),
+    },
   })
 })
+
 
 export const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id, ...shopScope(req) })

@@ -13,7 +13,7 @@ import {
 
 const router = Router()
 
-router.use(protect, requireActiveSubscription, requireShop)
+router.use(protect, requireShop)
 
 router.get('/', listProducts)
 router.get('/barcode/:code', getByBarcode)
