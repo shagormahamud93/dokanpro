@@ -5,22 +5,13 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import { rewriteMongoDbName, assertTestDatabase, TEST_DB_NAME } from './mongo-uri.js'
+import { requireIsolatedTestUri } from './mongo-uri.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
-const sourceUri = process.env.TEST_MONGODB_URI || process.env.MONGODB_URI
-if (!sourceUri) {
-  throw new Error('Set TEST_MONGODB_URI or MONGODB_URI for isolated tests')
-}
-
-const testUri = process.env.TEST_MONGODB_URI
-  ? process.env.TEST_MONGODB_URI
-  : rewriteMongoDbName(sourceUri, TEST_DB_NAME)
-
-assertTestDatabase(testUri)
+const testUri = requireIsolatedTestUri(process.env)
 
 process.env.NODE_ENV = 'test'
 process.env.MONGODB_URI = testUri
